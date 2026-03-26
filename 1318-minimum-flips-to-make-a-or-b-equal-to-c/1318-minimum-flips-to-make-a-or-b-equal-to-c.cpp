@@ -1,7 +1,7 @@
 class Solution {
 public:
     int minFlips(int a, int b, int c) {
-        /*int flips =0;
+        int flips =0;
 
         while(a != 0 || b != 0 || c != 0){
             if((c&1) == 1){
@@ -24,8 +24,8 @@ public:
         }
 
         return flips;
-        */
-        int result = (a | b) ^ c;
-        return __builtin_popcount(result) + __builtin_popcount((a & b) & (result));
+        
+        /*int result = (a | b) ^ c;
+        return __builtin_popcount(result) + __builtin_popcount((a & b) & (result));*/
     }
 };
