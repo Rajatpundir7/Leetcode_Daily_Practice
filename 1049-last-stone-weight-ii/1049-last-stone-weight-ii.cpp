@@ -35,6 +35,7 @@ public:
             ans = min(ans , abs(diff[i]));
         }
 return ans ;*/
+/*
 int sum  = accumulate(stones.begin() , stones.end() , 0);
 int goal = sum / 2 ;
 
@@ -51,5 +52,27 @@ for(int i = goal; i >= 0 ; i--){
     }
 }
 return 0;
+*/
+
+int n = stones.size();
+int sum  = accumulate(stones.begin() , stones.end() , 0);
+vector<vector<int>> dp(n+1 , vector<int>((sum/2)+1,0));
+
+for(int i = stones[0] ; i <= sum/2 ;i++ ){
+    dp[0][i] = stones[0];
+}
+
+for(int i =1; i<n;i++){
+    for(int j = 0 ;j <= sum/2;j++){
+        int pick =0;
+        if(stones[i] <= j ){
+            pick = stones[i] + dp[i-1][j- stones[i]];
+        }
+        int notpick =  dp[i-1][j];
+        dp[i][j] = max(pick , notpick);
+
+    }
+}
+return  sum - 2*dp[n-1][sum/2];
     }
 };
