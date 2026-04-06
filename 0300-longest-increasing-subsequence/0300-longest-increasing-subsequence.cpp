@@ -1,10 +1,5 @@
 class Solution {
 public:
-    int lengthOfLIS(vector<int>& nums) {
-        
-    }
-};class Solution {
-public:
     void min(int i ,vector<int> &dp , vector<int> &nums){
         for(int j = 0 ;j< i;j++){
             if(nums[i]>nums[j])
