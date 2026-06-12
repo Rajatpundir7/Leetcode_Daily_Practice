@@ -1,78 +1,96 @@
+const int MOD = 1e9 + 7;
+
 class Solution {
 public:
-    const int MOD = 1e9 + 7;
-    int LOG;
-    vector<vector<int>> up; // binary lifting table
-    vector<int> depth;
-    vector<vector<int>> adj;
+    void dfs(int u, int par, int lvl, vector<int> &levels, vector<vector<int>> &graph, vector<vector<int>> &LCA) {
+        levels[u] = lvl;
+        LCA[u][0] = par;
 
-    void dfs(int u, int p) {
-        up[u][0] = p;
-        for (int j = 1; j < LOG; j++) {
-            if (up[u][j-1] != -1)
-                up[u][j] = up[up[u][j-1]][j-1];
-            else
-                up[u][j] = -1;
-        }
-        for (int v : adj[u]) {
-            if (v != p) {
-                depth[v] = depth[u] + 1;
-                dfs(v, u);
+        for(auto &v: graph[u]) {
+            if(v != par) {
+                dfs(v, u, lvl + 1, levels, graph, LCA);
             }
         }
     }
 
-    int lca(int u, int v) {
-        if (depth[u] < depth[v]) swap(u, v);
-        int diff = depth[u] - depth[v];
-        for (int j = LOG-1; j >= 0; j--) {
-            if ((diff >> j) & 1) u = up[u][j];
-        }
-        if (u == v) return u;
-        for (int j = LOG-1; j >= 0; j--) {
-            if (up[u][j] != -1 && up[u][j] != up[v][j]) {
-                u = up[u][j];
-                v = up[v][j];
+    void init(int n, int maxN, vector<vector<int>> &LCA) {
+        for(int i = 1; i <= maxN; i++) {
+            for(int j = 0; j < n; j++) {
+                if(LCA[j][i - 1] != -1) {
+                    int par = LCA[j][i - 1];
+                    LCA[j][i] = LCA[par][i - 1];
+                }
             }
         }
-        return up[u][0];
     }
 
-    long long modpow(long long base, long long exp) {
-        long long res = 1;
-        while (exp > 0) {
-            if (exp & 1) res = (res * base) % MOD;
-            base = (base * base) % MOD;
-            exp >>= 1;
+    int findLCA(int a, int b, int maxN, vector<int> &levels, vector<vector<int>> &LCA) {
+        if(levels[a] > levels[b]) swap(a, b);
+
+        int d = levels[b] - levels[a];
+        while(d > 0) {
+            int jump = log2(d);
+            b = LCA[b][jump];
+            d -= (1LL << jump);
         }
-        return res;
+
+        if(a == b) return a;
+
+        for(int i = maxN; i >= 0; i--) {
+            if(LCA[a][i] != -1 && LCA[a][i] != LCA[b][i]) {
+                a = LCA[a][i], b = LCA[b][i];
+            }
+        }
+
+        return LCA[a][0];
     }
 
-    vector<int> assignEdgeWeights(vector<vector<int>>& edges, vector<vector<int>>& queries) {
-        int n = edges.size() + 1;
-        LOG = 20; // since n <= 1e5, log2(1e5) < 20
-        adj.assign(n+1, {});
-        up.assign(n+1, vector<int>(LOG, -1));
-        depth.assign(n+1, 0);
+    int getDistance(int u, int v, int maxN, vector<int> &levels, vector<vector<int>> &LCA) {
+        int lca = findLCA(u, v, maxN, levels, LCA);
+        return levels[u] + levels[v] - 2 * levels[lca];
+    }
 
-        for (auto &e : edges) {
-            adj[e[0]].push_back(e[1]);
-            adj[e[1]].push_back(e[0]);
+    long long powerMod(long long x, long long y, int mod) {
+        long long result = 1;
+        while (y > 0) {
+            if (y % 2) {
+                result = (result * x) % mod;
+            }
+            x = (x * x) % mod;
+            y /= 2;
+        }
+        return result;
+    }
+    
+    vector<int> assignEdgeWeights(vector<vector<int>> &edges, vector<vector<int>> &queries) {
+        int n = edges.size() + 1, m = queries.size();
+
+        vector<vector<int>> graph(n);
+        for(auto &edge: edges) {
+            graph[edge[0] - 1].push_back(edge[1] - 1);
+            graph[edge[1] - 1].push_back(edge[0] - 1);
         }
 
-        dfs(1, -1);
+        int maxN = log2(n);
+        vector<int> levels(n);
+        vector<vector<int>> LCA(n, vector<int> (maxN + 1, -1));
+        
+        dfs(0, -1, 0, levels, graph, LCA);
+        init(n, maxN, LCA);     
 
-        vector<int> ans;
-        for (auto &q : queries) {
-            int u = q[0], v = q[1];
-            if (u == v) {
-                ans.push_back(0);
+        vector<int> ans(m);
+        for(int i = 0; i < m; i++) {
+            int u = queries[i][0] - 1, v = queries[i][1] - 1;
+            int dist = getDistance(u, v, maxN, levels, LCA);
+
+            if(dist == 0) {
+                ans[i] = 0;
                 continue;
             }
-            int l = lca(u, v);
-            int k = depth[u] + depth[v] - 2*depth[l];
-            ans.push_back(modpow(2, k-1));
+            
+            ans[i] = powerMod(2, dist - 1, MOD);
         }
+        
         return ans;
     }
 };
