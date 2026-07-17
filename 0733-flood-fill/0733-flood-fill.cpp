@@ -17,7 +17,7 @@ public:
                 int i = it.first;
                 int j = it.second;
                 if(sr + i >=0 && sr + i < n && sc + j < m  && sc + j >= 0 && image[sr+i][sc+j] == image[sr][sc] && vis[sr+i][sc + j] != color){
-                    vis[sr+i][sc+j] = color;
+                  //  vis[sr+i][sc+j] = color;
                     q.push({sr+i, sc+j});
                 }
             }
