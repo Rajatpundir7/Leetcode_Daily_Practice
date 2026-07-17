@@ -31,21 +31,22 @@ public:
          int n = grid.size();
         int m =  grid[0].size();
         vector<vector<int>>vis(n,vector<int>(m,0));
-    vector<int> count ;
+    int count =0 ;
         for(int i =0 ;i < n;i++){
             for(int j =0 ; j <m;j++){
                 if(vis[i][j]  == 0 &&  grid[i][j] == 1 ){
-                   count.push_back(bfs(i,j,vis,grid));
+                   //count.push_back
+                  count = max(count,bfs(i,j,vis,grid));
                    // count++;
                 }
             }
         }
-        int ans =0;
+       /* int ans =0;
         for(int i =0 ; i< count.size();i++){
             if(ans < count[i]){
                 ans = count[i];
             }
-        }
-        return ans;
+        }*/
+        return count;
     }
 };
