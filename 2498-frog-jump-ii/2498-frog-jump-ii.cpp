@@ -9,11 +9,12 @@ public:
         vector<int>dp(n+1,0);
         dp[2] = ans;
         for (int i = 2; i < n; ++i) {
-           // dp[i+1] = max(dp[i], stones[i] - stones[i - 2]);
-           ans = max(ans,stones[i] - stones[i-2]);
+            
+            dp[i+1] = max(dp[i], stones[i] - stones[i - 2]);
+           //ans = max(ans,stones[i] - stones[i-2]);
         }
 
-       // return dp[n-1];
-       return ans;
+        return dp[n];
+      // return ans;
     }
 };
