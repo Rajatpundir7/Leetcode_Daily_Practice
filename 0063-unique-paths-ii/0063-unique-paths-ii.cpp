@@ -4,8 +4,9 @@ public:
         int  n = obstaclegrid.size();
         int m = obstaclegrid[0].size();
 
-        if (obstaclegrid[0][0] == 1 || obstaclegrid[n-1][m-1] == 1) return 0;
+        /*if (obstaclegrid[0][0] == 1 || obstaclegrid[n-1][m-1] == 1) return 0;
         obstaclegrid[0][0] = 1;
+        // ROW 
         for(int i = 1 ;i < m ;i++){
             if(obstaclegrid[0][i] == 0 && obstaclegrid[0][i-1] == 1){
                 obstaclegrid[0][i] = 1;
@@ -14,6 +15,8 @@ public:
                 obstaclegrid[0][i] = 0;
             }
         }
+
+        //   FOR COLUMN 
         for(int i = 1 ;i < n ;i++){
             if(obstaclegrid[i][0] == 0 && obstaclegrid[i-1][0] == 1){
                 obstaclegrid[i][0] = 1;
@@ -33,6 +36,22 @@ public:
             }
             }
         }
-        return obstaclegrid[n-1][m-1];
+        return obstaclegrid[n-1][m-1];*/
+     
+        vector<vector<int>>dp(n,vector<int>(m));
+        for(int i =0 ;i < n; i++){
+            for(int j =0 ;j < m; j++){
+                if(obstaclegrid[i][j] == 1) dp[i][j] =0 ;
+                else if(i == 0 && j == 0) dp[i][j] =1;
+                else{
+                    int left =0;
+     int right = 0;
+                     if(i >0) left = dp[i-1][j];
+                    if(j > 0) right = dp[i][j-1];
+                    dp[i][j] = left + right;
+                }
+            }
+        }
+        return dp[n-1][m-1];
     }
 };
