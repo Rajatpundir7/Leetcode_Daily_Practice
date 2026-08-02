@@ -1,52 +1,45 @@
 class Solution {
 public:
-    int bs(vector<int>&nums, int target,int n){
-        int low =0 , high = n-1; 
-        int ans = -1;
-        while(low<=high){
-            int mid = (low + high)/2;
-            
-           // if(nums[low] == target){  low = mid -1;}
-            // if(nums[high] == target) { high = mid +1;}
-            if(nums[mid] == target){
-                ans = mid;
-                high = mid -1;
-            }
-            else if(nums[mid] > target){
-                high = mid-1;
+    int lower_bound(vector<int>&nums,int target , int n){
+        int low = 0 , high = n;
+        while(low < high){
+            int mid = low + (high - low)/2;
+            if(nums[mid] < target) {
+                low = mid +1;
             }
             else{
-                low = mid+1;
+                high = mid;
             }
         }
-        return ans;
+        return low;
     }
-     int bs1(vector<int>&nums, int target,int n){
-        int low =0 , high = n-1; 
-         int ans = -1;
-        while(low<=high){
-            int mid = (low + high)/2;
-           
-           // if(nums[low] == target){  low = mid -1;}
-            //if(nums[high] == target) { high = mid +1;}
-            if(nums[mid] == target){
-                ans = mid;
-                low = mid + 1;
-            }
-            else if(nums[mid] > target){
-                high = mid-1;
+    int upper_bound(vector<int>&nums,int target , int n){
+        int low = 0 , high = n;
+        while(low < high){
+            int mid = low + (high - low)/2;
+            if(nums[mid] <= target) {
+                low = mid +1;
             }
             else{
-                low = mid+1;
+                high = mid;
             }
         }
-        return ans;
+        return low;
     }
     vector<int> searchRange(vector<int>& nums, int target) {
         vector<int> ans;
+
         int n = nums.size();
-       ans.push_back(bs(nums,target,n));
-       ans.push_back(bs1(nums,target,n));
+
+        int first = lower_bound(nums,target,n);
+        if(first  == n || nums[first] != target){
+            return {-1,-1};
+            //return ans ;
+        }
+      // ans.push_back();
+      int last = upper_bound(nums,target,n);
+       ans.push_back(first);
+       ans.push_back(last-1);
        return ans;
     }
 };
