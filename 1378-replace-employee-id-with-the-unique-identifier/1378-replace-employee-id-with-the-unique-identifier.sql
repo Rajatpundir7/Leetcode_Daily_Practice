@@ -1,0 +1,2 @@
+# Write your MySQL query statement below
+SELECT E2.UNIQUE_ID , E1.NAME FROM EMPLOYEES E1 LEFT OUTER JOIN EMPLOYEEUNI E2 on  e1.id = e2.id;
