@@ -1,10 +1,11 @@
 class Solution {
 public:
-    int lower_bound(vector<int>&nums,int target , int n){
-        int low = 0 , high = n;
+    int bs_upper(vector<int>&nums , int target , int n){
+        int low = 0, high = n;
+        int mid = 0;
         while(low < high){
-            int mid = low + (high - low)/2;
-            if(nums[mid] < target) {
+            mid = low + (high - low)/2;
+            if(nums[mid] <= target){
                 low = mid +1;
             }
             else{
@@ -13,33 +14,31 @@ public:
         }
         return low;
     }
-    int upper_bound(vector<int>&nums,int target , int n){
-        int low = 0 , high = n;
+    int bs_lower(vector<int>&nums, int target,int n){
+        int low = 0 , high =n;
+        int mid =0 ;
         while(low < high){
-            int mid = low + (high - low)/2;
-            if(nums[mid] <= target) {
+            mid = low + (high - low)/2;
+            if(nums[mid] < target ){
                 low = mid +1;
             }
             else{
                 high = mid;
             }
         }
-        return low;
+        return low ;
     }
     vector<int> searchRange(vector<int>& nums, int target) {
-        vector<int> ans;
-
         int n = nums.size();
-
-        int first = lower_bound(nums,target,n);
-        if(first  == n || nums[first] != target){
+        int lower = bs_lower(nums, target ,n);
+        if( lower == n || nums[lower] != target ){
             return {-1,-1};
-            //return ans ;
         }
-      // ans.push_back();
-      int last = upper_bound(nums,target,n);
-       ans.push_back(first);
-       ans.push_back(last-1);
-       return ans;
+        int upper = bs_upper(nums,target , n);
+
+        vector<int>ans ;
+        ans.push_back(lower);
+        ans.push_back(upper-1);
+                return ans;
     }
 };
