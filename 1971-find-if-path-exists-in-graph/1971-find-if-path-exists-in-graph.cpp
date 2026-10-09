@@ -1,35 +1,46 @@
 class Solution {
 public:
     bool validPath(int n, vector<vector<int>>& edges, int source, int destination) {
-        vector<vector<int>>adj(n);
-        for(int i =0 ;i < edges.size();i++){
-            int v = edges[i][0];
-            int u = edges[i][1];
+       /*
+        0 - 1 , 2
+        1 - 0 ,2 
+        2 - 0 , 1
+        so , 
+        step 1 : we create adgendecy list 
+        bidirection graph  u -> v and v -> u
+       */
+       vector<vector<int>>adj(n);
+       for(int i =0 ;i < edges.size();i++){
+        int u = edges[i][0];
+        int v = edges[i][1];
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+       }
+       /*
+       try to move / travel from source to destination
+       start travelsal from the soures 
+       */
 
-            adj[v].push_back(u);
-            adj[u].push_back(v);
+       queue<int>q;
+       vector<int>vis(n,0);
+       q.push(source);
+       
+       while(!q.empty()){
+        int node =  q.front();
+        q.pop();
+        vis[node] =1;
+        if(node == destination){
+            return true ;
         }
-        vector<int>vis(n,0);
-        queue<int>q;
-        q.push(source);
-        while(!q.empty()){
-            int a = q.front();
-            q.pop();
-          //  vis[it] = 1;
-            if(a == destination){
-                        return true;
-                    }
-
-            for(auto it : adj[a]){
-                if(!vis[it]){
-                    vis[it] =1;
-                    q.push(it);
-                }
+        for(auto it: adj[node]){
+            if(!vis[it]){
+                q.push(it);
+                vis[it] =1;
             }
-
-
         }
-        return false;
         
+       }
+        return false;
+       
     }
 };
