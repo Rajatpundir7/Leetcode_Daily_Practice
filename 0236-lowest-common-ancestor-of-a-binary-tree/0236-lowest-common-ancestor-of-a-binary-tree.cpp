@@ -9,23 +9,29 @@
  */
 class Solution {
 public:
+    TreeNode* ans = NULL;
+    int solve(TreeNode* root,  TreeNode* p , TreeNode * q){
+
+        if(root == NULL) return 0;
+        
+        int left = solve(root->left,p,q);
+        int right = solve(root->right,p,q);
+        int self =0;
+        if(root == p || root == q) self = 1;
+        int total = self + left + right ;
+        if(total == 2 && ans == NULL) ans = root;
+        return total;
+    }
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if(root == NULL || root == p || root == q){
-            return root;
-        }
+       
+       // task is to fidn the lowest comman boss of 2 employee
+       // means a nearest comman parent of both child 
+       // intution is ask at every node for the 
+       // how many child you have from (x1, x2 ) -- 0 , 1, 2 
+       // ask from bottom to root 
+       //TreeNode* ans = NULL;
 
-        TreeNode* left =   lowestCommonAncestor(root->left , p , q);
-        TreeNode * right =  lowestCommonAncestor(root->right , p , q);
-
-        if(left != NULL && right != NULL ){
-            return root;
-        }
-
-        if(left != NULL){
-            return left ;
-        }
-        
-            return right;
-        
+       int x=  solve(root, p , q);
+       return ans ;
     }
 };
