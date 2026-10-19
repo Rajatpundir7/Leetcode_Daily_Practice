@@ -18,12 +18,15 @@ public:
             ans = root;
             return ;
         }
-        if(root->val < val) search(root->left,val);
-        if(root->val > val ) search(root->right,val);
+        if(root->val < val) search(root->right,val);
+        if(root->val > val ) search(root->left,val);
     
     }
     TreeNode* searchBST(TreeNode* root, int val) {
+
         if(root == NULL) return root;
+
+        search(root,val);
         return ans;
     }
 };
