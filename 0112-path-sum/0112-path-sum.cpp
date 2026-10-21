@@ -11,17 +11,30 @@
  */
 class Solution {
 public:
+    int sum =0 , flag =0 ;
+    void inorder(TreeNode* root, int targetsum){
+        if(root == NULL){
+            return ;
+        }
+        sum += root->val;
+        
+        if(root->left == NULL && root->right == NULL){
+              if(sum == targetsum ){
+                flag =1;
+                 
+            }
+        }
+        
+        inorder(root->left,targetsum);
+        
+        inorder(root->right, targetsum);
+        sum -= root->val;
+
+    }
     bool hasPathSum(TreeNode* root, int targetsum) {
-        if( root == NULL ){
-            return false;
-        }
-
-        targetsum -= root->val;
-
-        if(root->left == NULL &&  root->right  == NULL){
-            return targetsum ==0 ;
-        }
-
-        return hasPathSum(root->left , targetsum) || hasPathSum(root->right , targetsum);
+        inorder(root,targetsum);
+        if(root == NULL ) return false;
+        if(flag == 1) return true ;
+        else return false;
     }
 };
